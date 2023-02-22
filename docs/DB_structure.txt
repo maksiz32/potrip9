@@ -1,0 +1,24 @@
+DB structure:
+
+Country*
+|
+Locations* (Regions, SubRegions, ...) id, countries_id, regions_id, level(tinyInt), name, description, picture(string)
+|
+Points* (все и достопримечательностей и коммерческие, и добавленные пользователями) -
+id, locations_id, points_types_id, visible(bool), slug, name, address, date_made(string), now, condition, gps_x(double), gps_y(double), description, verified(data | null), commers(bool)
+
+Points_types* - id, name, description
+
+Users* (id, external_id(string), register_variants_id, is_block(bool), users_roles_id, login, first name, secondary name, father name(null), e-mail, email_verified_at, site, address, city, photo(string), password, description, settings(json), notes, rememberToken, timestamp)
+
+PointsHasUsers* - id, users_id, points_id
+
+Phones* - (id, users_id, phone, annotation)
+
+Users_roles* - (id, name_eng, name_cur_language, settings(json)) - добавить роль Supervisor - кастомерам - они могут по своим объектам быть супервизорами
+
+Register_variants* (id, name_eng, name_cur_language, picture, description)
+
+Messages* - id, users_id, points_id, title, message, mark
+
+Photos* - id, users_id, points_id, messages_id, path, description
