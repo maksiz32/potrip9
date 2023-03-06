@@ -33,6 +33,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed',
         ]);
 
+        /** @var User $user */
         $user = User::create([
             'login' => $newUserData['login'],
             'register_variants_id' => $newUserData['register_variants_id'],
