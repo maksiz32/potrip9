@@ -39,7 +39,7 @@ return new class extends Migration
                 ->default(null)
                 ->comment('Дата верификации объекта или NULL');
             $table
-                ->boolean('commers')
+                ->boolean('is_commertion')
                 ->comment('Отметка если объект коммерческий партнер проекта');
             $table->timestamps();
         });

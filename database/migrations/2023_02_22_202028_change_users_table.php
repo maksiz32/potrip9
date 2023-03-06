@@ -49,7 +49,7 @@ return new class extends Migration
                 ->comment('Отчество');
             $table
                 ->string('city')
-                ->after('email_verified_at')
+                ->after('email')
                 ->nullable()
                 ->default(null);
             $table

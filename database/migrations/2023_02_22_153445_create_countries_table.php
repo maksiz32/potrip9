@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('name_eng');
             $table
                 ->string('description')
-                ->nullable();
+                ->nullable()
+                ->default(null);
         });
     }
 

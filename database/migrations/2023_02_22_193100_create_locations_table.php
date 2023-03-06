@@ -20,6 +20,10 @@ return new class extends Migration
                 ->foreignIdFor(Country::class)
                 ->comment('Связь с таблицей клиенты, если это VIP или коммерческий пользователь');
             $table
+                ->bigInteger('regions_id')
+                ->nullable()
+                ->comment('Ссылка на объект более высшего уровня');
+            $table
                 ->tinyInteger('level')
                 ->comment('Уровень вложенности объекта таблицы');
             $table->string('name');

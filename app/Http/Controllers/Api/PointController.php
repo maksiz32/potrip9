@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PointResource;
+use App\Models\Point;
 use Illuminate\Http\Request;
 
 class PointController extends Controller
@@ -14,7 +16,7 @@ class PointController extends Controller
      */
     public function index()
     {
-        //
+        return PointResource::collection(Point::query()->paginate(10));
     }
 
     public function requestForCreate()

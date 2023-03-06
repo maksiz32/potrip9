@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\PointController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +22,15 @@ Route::post('/registrate', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/', [CountryApiController::class, 'index']);
+    Route::post('/', [CountryApiController::class, 'index']);
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [UserController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'points'], function () {
+        Route::post('/', [PointController::class, 'index']);
+    });
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
