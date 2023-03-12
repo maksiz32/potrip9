@@ -9,15 +9,16 @@ const StateContext = createContext({
 
 export const ContextProvider = ({children}) => {
   const [currentUser, setUser] = useState({});
-  const [token, _setToken] = useState(localStorage.getItem('POTRIP_TOKEN'));
+  const [token, _setToken] = useState(localStorage.getItem('POTRIP_ACCESS_TOKEN'));
 
   const setToken = (token) => {
     _setToken(token);
-  }
-  if (token) {
-    localStorage.setItem('POTRIP_TOKEN', token);
-  } else {
-    localStorage.removeItem('POTRIP_TOKEN');
+
+    if (token) {
+      localStorage.setItem('POTRIP_ACCESS_TOKEN', token);
+    } else {
+      localStorage.removeItem('POTRIP_ACCESS_TOKEN');
+    }
   }
 
   return (

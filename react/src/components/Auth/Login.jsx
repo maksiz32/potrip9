@@ -1,58 +1,111 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import {FormGroup, TextField, FormControl, FormLabel, CardContent, Card, Button} from "@mui/material";
+import {TextField, Button, Box, Typography, Grid, CssBaseline, Container, Zoom, Alert} from "@mui/material";
+import AuthClasses from './Auth.module.css';
 import {Link} from 'react-router-dom';
-
-const card = (
-  <React.Fragment>
-    <CardContent>
-      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-        <FormLabel component="legend" className={'text-center'}>Login</FormLabel>
-        <FormGroup>
-          <div className={'mb-2'}>
-            <TextField
-              required
-              id="outlined-required"
-              label="Name"
-            />
-          </div>
-          <div>
-            <TextField
-              id="outlined-password-input outlined-required"
-              required
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-            />
-          </div>
-        </FormGroup>
-        <Button variant="contained" className={'mt-2'}>Login</Button>
-        <p className='message'>
-          Not registered? <Link to="/register">Register</Link>
-        </p>
-      </FormControl>
-    </CardContent>
-  </React.Fragment>
-);
-
-const onSubmit = (Event) => {
-  Event.preventDefault();
-
-};
+import axiosClient from "../../axios-client";
+import {useStateContext} from "../../context/ContextProvider";
+import {useState} from "react";
 
 export default function Login() {
+  const {setUser, setToken} = useStateContext();
+  let [errors, setErrors] = useState(null);
+
+  function loginSubmit(Event) {
+    Event.preventDefault();
+    const Data = new FormData(Event.currentTarget);
+    const loginRequest = {
+      login: Data.get('login'),
+      password: Data.get('password'),
+    };
+
+    axiosClient.post('login', loginRequest)
+      .then(({data}) => {
+        setUser(data.user);
+        setToken(data.token);
+      })
+      .catch((error) => {
+        const errorResponse = error.response;
+        if (errorResponse && errorResponse.status === 401) {
+          setErrors(errorResponse.data);
+        }
+        if (errorResponse && errorResponse.status === 422) {
+          setErrors(errorResponse.data.errors);
+        }
+      })
+  }
+
   return (
-    <div
-      style={{height:'90vh', width: '100%'}}
-      className={'d-flex justify-content-center align-items-center'}
-    >
-      <form
-        className={'mt-5'}
-        sx={{ minWidth: 275 }}
-        onClick={onSubmit}
+    <Zoom in={true} style={{ transitionDelay: '300ms' }}>
+      <div
+        style={{height:'85vh'}}
+        className={'d-flex justify-content-center align-items-center'}
       >
-        <Card variant="outlined">{card}</Card>
-      </form>
-    </div>
-  )
+        <Container component="main" maxWidth="xs" className={AuthClasses.auth_form}>
+          <CssBaseline />
+          <Box className={AuthClasses.auth_form_body}>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box component="form" onSubmit={loginSubmit} noValidate sx={{ mt: 1 }}>
+              {errors &&
+                <Alert severity="error">
+                  {Object.keys(errors).map(key => (
+                    <p key={key}>{errors[key]}</p>
+                  ))}
+                </Alert>
+              }
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="potrip-signin-username"
+                label="Username"
+                name="login"
+                autoComplete="login"
+                autoFocus
+                className={AuthClasses.auth_form_text}
+                size="small"
+                error={errors && errors.hasOwnProperty('login')}
+                helperText= {errors && errors.hasOwnProperty('login') ? errors.login[0] : ''}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="potrip-signin-password"
+                autoComplete="current-password"
+                className={AuthClasses.auth_form_text}
+                size="small"
+                error={errors && errors.hasOwnProperty('password')}
+                helperText= {errors && errors.hasOwnProperty('password') ? errors.password[0] : ''}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link to="/register" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
+      </div>
+    </Zoom>
+  );
 }

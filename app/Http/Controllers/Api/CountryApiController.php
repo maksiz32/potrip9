@@ -21,7 +21,7 @@ class CountryApiController extends Controller
         $dataRequest = $request->all(); //validate
         extract($dataRequest, EXTR_OVERWRITE);
 
-        return response()->json(['data' => Country::all(), 'ff' => $x . ' ' . $y], 200);
+        return response()->json(['data' => Country::paginate(10), 'ff' => $x . ' ' . $y], 200);
     }
 
     /**

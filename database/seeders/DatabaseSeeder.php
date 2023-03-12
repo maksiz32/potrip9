@@ -7,7 +7,6 @@ use App\Models\Country;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\HasApiTokens;
 
 class DatabaseSeeder extends Seeder
 {
@@ -31,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ])
             ->tokens()->create([
                 'tokenable_type' => User::class,
-                'tokenable_id' => '1',
+                'tokenable_id' => 1,
                 'name' => 'PoTripToken',
                 'token' => hash('sha256', 'N7fp6GTjO9CJD1QIhqv0Ty1ZZbJeS3tFIbToFJZQ'),
                 'abilities' => ["*"],
@@ -39,6 +38,6 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
 
-        Country::factory(10)->create();
+        Country::factory(30)->create();
     }
 }

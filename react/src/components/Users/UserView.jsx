@@ -1,4 +1,4 @@
-export default function Points() {
+export default function UserView() {
     return (
         <>
 

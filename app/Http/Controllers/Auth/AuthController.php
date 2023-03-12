@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,68 +23,64 @@ class AuthController extends Controller
         return view('auth.auth');
     }
 
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
-        $newUserData = $request->validate([
-            'login' => 'required|string|unique:users,login',
-            'register_variants_id' => 'required|integer',
-            'first_name' => 'required|string',
-            'users_role_id' => 'required|integer',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed',
-        ]);
+        $newUserData = $request->validated();
 
         /** @var User $user */
         $user = User::create([
             'login' => $newUserData['login'],
-            'register_variants_id' => $newUserData['register_variants_id'],
+            'register_variants_id' => 1,
             'first_name' => $newUserData['first_name'],
-            'users_role_id' => $newUserData['users_role_id'],
+            'users_role_id' => 1,
             'email' => $newUserData['email'],
             'password' => bcrypt($newUserData['password']),
         ]);
 
-        $token = $user->createToken('PoTripToken');
+        $token = $user->createToken('PoTripToken')->plainTextToken;
 
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
-
-        return response($response, 201);
+        return response(compact('user', 'token'));
     }
 
     public function login(Request $request)
     {
         $loginFields = $request->validate([
-            'login' => 'required|string',
+            'login' => 'required|string|exists:users,login',
             'password' => 'required|string',
         ]);
 
-        $user = User::where('login', $loginFields['login'])->first();
-
-        if (!$user || !Hash::check($loginFields['password'], $user->password)) {
+        if (!Auth::attempt($loginFields)) {
             return response([
-                'message' => 'Bad request',
+                'login' => 'Login or password is not correct',
+            ], 422);
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (!$user) {
+            return response([
+                'login' => 'Login is not correct',
             ], 401);
         }
 
-        $token = $user->createToken('PoTripToken');
+        if (!Hash::check($loginFields['password'], $user->password)) {
+            return response([
+                'password' => 'Password is not correct',
+            ], 401);
+        }
 
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
+        $token = $user->createToken('PoTripToken')->plainTextToken;
 
-        return response($response, 201);
+        return response(compact('user', 'token'));
     }
 
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
+        /** @var User $user */
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
 
-        return [
-            'message' => 'Logged out',
-        ];
+        return response('Log out', 204);
     }
 }
