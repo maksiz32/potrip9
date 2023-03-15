@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,10 +70,14 @@ class AuthController extends Controller
                 'password' => 'Password is not correct',
             ], 401);
         }
+        $filteredUser = $user->only(["login", "first_name", "email", "settings"]);
 
         $token = $user->createToken('PoTripToken')->plainTextToken;
 
-        return response(compact('user', 'token'));
+        return response([
+            'user' => $filteredUser,
+            'token' => $token,
+        ]);
     }
 
     public function logout(Request $request)
