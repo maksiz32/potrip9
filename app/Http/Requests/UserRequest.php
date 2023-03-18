@@ -25,11 +25,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'login' => 'required|string|unique:users,login|min:3|max:55',
+            'login' => 'required|string|min:3|max:55|unique:users,login',
             'register_variants_id' => 'integer',
             'first_name' => 'required|string|min:2',
             'users_role_id' => 'integer',
-            'email' => 'required|string|unique:users,email|email',
+            'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',
                 'confirmed',

@@ -70,7 +70,7 @@ class AuthController extends Controller
                 'password' => 'Password is not correct',
             ], 401);
         }
-        $filteredUser = $user->only(["login", "first_name", "email", "settings"]);
+        $filteredUser = $user->only(['login', 'first_name', 'email', 'settings']);
 
         $token = $user->createToken('PoTripToken')->plainTextToken;
 
