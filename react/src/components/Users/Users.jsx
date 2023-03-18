@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [buttonId, setButtonId] = useState(null);
 
   useEffect(() => {
     getAllUsers();
@@ -28,9 +29,9 @@ export default function Users() {
     setLoading(true);
     axiosClient.get('/users')
       .then(({data}) => {
-        setLoading(false);
         setUsers(data.data);
         console.log(data);
+        setLoading(false);
       })
       .catch(() => {
         setLoading(false);
@@ -38,12 +39,15 @@ export default function Users() {
   }
 
   const blockUser = (User) => {
+    setLoading(true);
+    setButtonId(User.id);
     axiosClient.post(`/users/${User.id}/block`, User.id)
       .then(() => {
         getAllUsers();
       })
       .catch(error => {
         console.log(error);
+        setLoading(false);
       });
   }
 
@@ -113,6 +117,7 @@ export default function Users() {
                     <IconButton
                       onClick={ev => blockUser(User)}
                       component="label"
+                      disabled={buttonId && buttonId === User.id && loading}
                     >
                       <FaUserLock
                         fontSize="1.5rem"
@@ -125,6 +130,7 @@ export default function Users() {
                     <IconButton
                       onClick={ev => blockUser(User)}
                       component="label"
+                      disabled={buttonId && buttonId === User.id && loading}
                     >
                       <FaUser
                         fontSize="1.5rem"
