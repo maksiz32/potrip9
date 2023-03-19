@@ -11,7 +11,7 @@ Route::post('/registrate', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/', [CountryApiController::class, 'index']);
+//    Route::post('/', [CountryApiController::class, 'index']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -28,6 +28,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['prefix' => 'points'], function () {
         Route::post('/', [PointController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'countries'], function () {
+        Route::put('/', [CountryApiController::class, 'index']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

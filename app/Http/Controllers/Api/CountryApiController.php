@@ -3,25 +3,32 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CountryApiRequest;
 use App\Models\Country;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Stevebauman\Location\Facades\Location;
 
 class CountryApiController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param CountryApiRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(CountryApiRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $dataRequest = $request->all(); //validate
-        extract($dataRequest, EXTR_OVERWRITE);
+        $request->validate([
+            'latitude' => 'sometimes|required|numeric',
+            'longitude' => 'sometimes|required|numeric',
+        ]);
 
-        return response()->json(['data' => Country::paginate(10), 'ff' => $x . ' ' . $y], 200);
+        $country = \Location::get($request->ip());
+        if (!$country) {
+            //
+        }
+
+        return response()->json(['countries' => Country::paginate(10), 'cc' => $country]);
     }
 
     /**

@@ -15,12 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/country" />,
-      },
-      {
-        path: '/country',
         element: <Country />,
-        name: 'Country',
       },
       {
         path: '/users',

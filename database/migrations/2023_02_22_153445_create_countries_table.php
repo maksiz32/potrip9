@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('name_eng');
+            $table->string('country_code', 2);
             $table
                 ->string('description')
                 ->nullable()
