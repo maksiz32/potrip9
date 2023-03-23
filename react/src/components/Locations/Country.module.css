@@ -1,0 +1,13 @@
+.country_main {
+  flex-direction: column;
+}
+
+.country_main_card {
+  margin: 0 0 20px 0;
+}
+
+.country_main_check__img {
+  width: 50px;
+  border-radius: 6px;
+  margin: 0 0 0 10px;
+}

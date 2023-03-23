@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
+use App\Models\Location;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -60,5 +62,12 @@ class LocationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getAllByCountry(int $id)
+    {
+        return response()->json(['locations_first' => Location::where('country_id', $id)
+            ->where('regions_id', null)
+            ->get()]);
     }
 }

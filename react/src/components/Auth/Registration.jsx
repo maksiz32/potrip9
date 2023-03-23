@@ -108,7 +108,7 @@ export default function Registration() {
                 margin="dense"
                 required
                 fullWidth
-                id="outlined-password-input outlined-required"
+                id="outlined-password-input"
                 label="Password"
                 type="password"
                 name="password"

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -32,6 +33,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['prefix' => 'countries'], function () {
         Route::put('/', [CountryApiController::class, 'index']);
+//        Route::get('/{id}', [CountryApiController::class, 'show']);
+    });
+
+    Route::group(['prefix' => 'locations'], function () {
+        Route::get('/{id}', [LocationController::class, 'getAllByCountry']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

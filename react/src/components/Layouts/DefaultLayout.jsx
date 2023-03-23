@@ -1,3 +1,5 @@
+import DefaultLayoutCSS from './DefaultLayout.module.css';
+
 import {Outlet, Navigate, Link} from "react-router-dom";
 import {useStateContext} from "../../context/ContextProvider";
 import {useEffect, useState} from "react";
@@ -95,16 +97,18 @@ export default function DefaultLayout() {
 
   return (
     <div id="defaultLayout">
-      <Box sx={{flexGrow: 1}}>
+      <Box sx={{flexGrow: 1}} className={DefaultLayoutCSS.navbar}>
         <AppBar position="static" color="transparent">
           <Toolbar>
             <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-              Photos
+              <Link to="/" style={{color: 'black', textDecoration: 'none'}}>
+                {('potrip').toUpperCase()}
+              </Link>
             </Typography>
             <Box sx={{display: {xs: 'none', sm: 'block'}}}>
               {navItems.map((item) => (
-                <Button key={item}>
+                <Button key={item} className={DefaultLayoutCSS.menu_items}>
                   {item}
                 </Button>
               ))}

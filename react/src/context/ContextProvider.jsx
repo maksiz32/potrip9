@@ -1,4 +1,5 @@
 import {createContext, useContext, useState} from "react";
+import Constants from '../components/Dictionaries/Constants'
 
 const StateContext = createContext({
   currentUser: null,
@@ -9,15 +10,15 @@ const StateContext = createContext({
 
 export const ContextProvider = ({children}) => {
   const [currentUser, setUser] = useState({});
-  const [token, _setToken] = useState(localStorage.getItem('POTRIP_ACCESS_TOKEN'));
+  const [token, _setToken] = useState(localStorage.getItem(Constants.ACCESS_TOKEN_NAME));
 
   const setToken = (token) => {
     _setToken(token);
 
     if (token) {
-      localStorage.setItem('POTRIP_ACCESS_TOKEN', token);
+      localStorage.setItem(Constants.ACCESS_TOKEN_NAME, token);
     } else {
-      localStorage.removeItem('POTRIP_ACCESS_TOKEN');
+      localStorage.removeItem(Constants.ACCESS_TOKEN_NAME);
     }
   }
 
