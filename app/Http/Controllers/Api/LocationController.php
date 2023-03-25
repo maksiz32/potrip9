@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RegionResource;
 use App\Models\Country;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -64,10 +65,20 @@ class LocationController extends Controller
         //
     }
 
-    public function getAllByCountry(int $id)
+    public function getAllByCountry(Request $request)
     {
-        return response()->json(['locations_first' => Location::where('country_id', $id)
+        $countryId = $request->validate([
+            'id' => 'required|numeric',
+        ]);
+        /** @var Location $region */
+        $region = Location::where('country_id', $countryId['id'])
             ->where('regions_id', null)
-            ->get()]);
+            ->get();
+
+        if ($region->isEmpty()) {
+            return response('Regions not found', 404);
+        }
+
+        return response(['location_first' => RegionResource::collection($region)], 200);
     }
 }

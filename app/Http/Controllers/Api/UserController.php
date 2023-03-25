@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UsersRoleResource;
 use App\Models\User;
+use App\Models\UsersRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -48,12 +50,23 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param User $user
-     * @return UserResource
+     * @param Request $request
      */
-    public function show(User $user): UserResource
+    public function show(Request $request)
     {
-        return new UserResource($user);
+        $validated = $request->validate([
+            'id' => 'required|numeric|exists:users,id'
+        ]);
+
+        if ($validated['id']) {
+            $user = User::query()
+                ->where('id', $validated['id'])
+                ->first();
+
+            return response()->json($user);
+        }
+
+        return response("User don't found", 404);
     }
 
     /**
@@ -115,5 +128,10 @@ class UserController extends Controller
         ]);
 
         return response("User access is changed", 201);
+    }
+
+    public function getUserRoles(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(UsersRoleResource::collection(UsersRole::all()));
     }
 }

@@ -66,7 +66,11 @@ function SearchIcon() {
 export default function DefaultLayout() {
   const {currentUser, token, setUser, setToken} = useStateContext();
   const [anchorEl, setAnchorEl] = useState(null);
-  const navItems = ['Home', 'About', 'Contact']
+  const navItems = [
+    {name: 'Home', link: '/'},
+    {name: 'About', link: '/#'},
+    {name: 'Contact', link: '/#'}
+  ];
 
   useEffect(() => {
     axiosClient.get('/user')
@@ -108,8 +112,13 @@ export default function DefaultLayout() {
             </Typography>
             <Box sx={{display: {xs: 'none', sm: 'block'}}}>
               {navItems.map((item) => (
-                <Button key={item} className={DefaultLayoutCSS.menu_items}>
-                  {item}
+                <Button
+                  key={item.name}
+                  component={Link}
+                  to={item.link}
+                  className={DefaultLayoutCSS.menu_items}
+                >
+                  {item.name}
                 </Button>
               ))}
             </Box>

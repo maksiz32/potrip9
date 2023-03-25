@@ -3,7 +3,7 @@ import {Autocomplete, Box, FormControl, TextField} from "@mui/material";
 import {Link} from "react-router-dom";
 import CountryCSS from "../Locations/Country.module.css";
 
-function MySearchSelect(props) {
+function CountrySelect(props) {
   return (
     <FormControl fullWidth>
       <Autocomplete
@@ -44,4 +44,4 @@ function MySearchSelect(props) {
   );
 }
 
-export default MySearchSelect;
+export default CountrySelect;

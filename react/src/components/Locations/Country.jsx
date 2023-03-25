@@ -2,10 +2,10 @@ import CountryCSS from './Country.module.css';
 
 import {useEffect, useState} from "react";
 import axiosClient from "../../axios-client";
-import Constants from "../Dictionaries/Constants";
-import MySearchSelect from "../Units/MySearchSelect";
+import {TokenNames} from "../../utils/Constants";
+import CountrySelect from "../Units/CountrySelect";
 import CurrentCountryCard from "./CurrentCountryCard";
-import Preload from "../Units/Preload";
+import Preload from "../Units/UI/Preload";
 
 export default function Country() {
   const [coordinates, _setCoordinates] = useState({});
@@ -16,20 +16,25 @@ export default function Country() {
   const setCoordinates = (Coordinates) => {
     _setCoordinates(Coordinates);
     if (Coordinates) {
-      sessionStorage.setItem(Constants.USER_GPS_NAME, JSON.stringify(Coordinates));
+      sessionStorage.setItem(TokenNames.USER_GPS_NAME, JSON.stringify(Coordinates));
     } else {
-      sessionStorage.removeItem(Constants.USER_GPS_NAME);
+      sessionStorage.removeItem(TokenNames.USER_GPS_NAME);
     }
   }
 
   const getCoordinatesFromStorage = () => {
-    return JSON.parse(sessionStorage.getItem(Constants.USER_GPS_NAME)) || {};
+    return JSON.parse(sessionStorage.getItem(TokenNames.USER_GPS_NAME)) || {};
   }
 
   const getCountries = () => {
     const Data = getCoordinatesFromStorage() || {};
 
-    axiosClient.put('/countries', Data)
+    axiosClient.get('/countries', {
+      params: {
+        latitude: Data.latitude,
+        longitude: Data.longitude,
+      }
+    })
       .then(({data}) => {
         setUserCountry(data.currentCountry);
         setCountries(data.countries);
@@ -67,13 +72,11 @@ export default function Country() {
         <Preload />
         :
         <main className={CountryCSS.country_main}>
-          {UserCountry && (
-            <CurrentCountryCard UserCountry={UserCountry} />
-          )}
+          {UserCountry && (<CurrentCountryCard UserCountry={UserCountry} />)}
           {countries && (
             <div>
               <h3>{UserCountry && ('Or ')}Check any country:</h3>
-              <MySearchSelect countries={countries}/>
+              <CountrySelect countries={countries}/>
             </div>
           )}
         </main>

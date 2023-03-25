@@ -23,16 +23,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/', [UserController::class, 'store']);
         Route::get('/{id}', [UserController::class, 'show']);
         Route::put('/{id}', [UserController::class, 'update']);
-        Route::delete('/{id}', [UserController::class, 'destroy']);
-        Route::post('/{id}/block', [UserController::class, 'blockUser']);
+//        Route::delete('/{id}', [UserController::class, 'destroy']);
+        Route::put('/{id}/block', [UserController::class, 'blockUser']);
     });
 
+    Route::get('/user-roles', [UserController::class, 'getUserRoles']);
+
     Route::group(['prefix' => 'points'], function () {
-        Route::post('/', [PointController::class, 'index']);
+        Route::get('/', [PointController::class, 'index']);
     });
 
     Route::group(['prefix' => 'countries'], function () {
-        Route::put('/', [CountryApiController::class, 'index']);
+        Route::get('/', [CountryApiController::class, 'index']);
 //        Route::get('/{id}', [CountryApiController::class, 'show']);
     });
 

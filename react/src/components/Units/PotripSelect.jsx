@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import {FormControl, InputLabel, Select} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 
-function PotripSelect({items, ...props}) {
-  const [selectValue, setSelectValue] = useState('');
+function PotripSelect({items, selectedValue, setSelectedValue, ...props}) {
 
   const handleChange = (event) => {
-    setSelectValue(event.target.value);
+    setSelectedValue(event.target.value);
   };
 
   return (
@@ -15,17 +14,15 @@ function PotripSelect({items, ...props}) {
       fullWidth
       size="small"
     >
-      <InputLabel id={`potrip-select-label-${props.name}`}>{props.label}</InputLabel>
+      <InputLabel>{props.label}</InputLabel>
       <Select
-        labelId={`potrip-select-label-${props.name}`}
-        id={`potrip-simple-select-${props.name}`}
-        value={selectValue}
+        value={selectedValue}
         onChange={handleChange}
         {...props}
       >
-        {items && items.map((Item) => (
+        {items && items.map((Item) =>
           <MenuItem key={Item.id} value={Item.value}>{Item.text}</MenuItem>
-        ))}
+        )}
       </Select>
     </FormControl>
   );

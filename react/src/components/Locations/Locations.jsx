@@ -1,16 +1,23 @@
+import LocationsCSS from './Locations.module.css'
+
 import * as React from 'react';
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axiosClient from "../../axios-client";
+import Preload from "../Units/UI/Preload";
 
 export default function Locations() {
   const [regions, setRegions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation()
   const { country } = location.state
-  console.log(country);
 
   const getAllLocations = (id) => {
-    axiosClient.get(`/locations/${id}`, country)
+    axiosClient.get(`/locations/${id}`, {
+      params: {
+        id: country.id,
+      }
+    })
       .then(({data}) => {
         setRegions(data.location_first);
         console.log(data);
@@ -19,6 +26,7 @@ export default function Locations() {
         // ToDo: make myself alerts
         console.log(error);
       })
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -27,11 +35,15 @@ export default function Locations() {
 
   return (
     <div>
-      {regions
+      {isLoading
       ?
-        'Location'
+        <Preload />
       :
-        'No resource data'
+        regions.length
+        ?
+          regions.map(region => <div key={region.name}>{region.name} {region.description}</div>)
+        :
+          <div className={LocationsCSS.empty_info}>No resource data</div>
       }
     </div>);
 }
