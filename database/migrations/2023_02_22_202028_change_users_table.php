@@ -49,7 +49,7 @@ return new class extends Migration
                 ->comment('Отчество');
             $table
                 ->string('city')
-                ->after('email_verified_at')
+                ->after('email')
                 ->nullable()
                 ->default(null);
             $table
@@ -82,21 +82,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['users_roles_id']);
-            $table->dropForeign(['register_variants_id']);
-            $table->dropColumn('external_id');
-            $table->dropColumn('is_block');
-            $table->dropColumn('login');
-            $table->renameColumn('first_name', 'name');
-            $table->dropColumn('secondary_name');
-            $table->dropColumn('fathers_name');
-            $table->dropColumn('city');
-            $table->dropColumn('site');
-            $table->dropColumn('address');
-            $table->dropColumn('description');
-            $table->dropColumn('notes');
-            $table->dropColumn('settings');
-        });
+        Schema::dropIfExists('users');
     }
 };

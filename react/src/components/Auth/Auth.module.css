@@ -1,0 +1,17 @@
+.auth_form {
+  background-color: #dcdcfa !important;
+  box-shadow: 5px 5px 10px #a0aec0;
+}
+.auth_form_body {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.auth_form_text input {
+  background-color: #fff;
+  font-size: 0.9em !important;
+}
+.auth_form_form {
+  margin-top: 0 !important;
+}

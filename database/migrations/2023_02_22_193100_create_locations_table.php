@@ -21,6 +21,7 @@ return new class extends Migration
                 ->comment('Связь с таблицей клиенты, если это VIP или коммерческий пользователь');
             $table
                 ->bigInteger('regions_id')
+                ->nullable()
                 ->comment('Ссылка на объект более высшего уровня');
             $table
                 ->tinyInteger('level')
