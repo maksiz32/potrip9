@@ -7,6 +7,7 @@ import {styled} from "@mui/material/styles";
 
 function UsersTable({users, blockUser, ...props}) {
   const [buttonId, setButtonId] = useState(null);
+  console.log(users);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,14 +58,13 @@ function UsersTable({users, blockUser, ...props}) {
               <StyledTableCell align="right">{User.secondary_name}</StyledTableCell>
               <StyledTableCell align="right">{User.city}</StyledTableCell>
               <StyledTableCell align="right">{User.email}</StyledTableCell>
-              <StyledTableCell align="right">{User.users_role_id}</StyledTableCell>
+              <StyledTableCell align="right">{User.roles.name_eng}</StyledTableCell>
               <StyledTableCell align="right">{User.is_block ? 'Blocked' : ''}</StyledTableCell>
               <StyledTableCell align="right">{User.notes}</StyledTableCell>
               <StyledTableCell align="right">{User.created_at}</StyledTableCell>
               <StyledTableCell align="center">
                 <Link
                   to={'/users/' + User.id}
-                  state={{userId: User.id}}
                 >
                   <FaUserEdit
                     fontSize="1.5rem"
