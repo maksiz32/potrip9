@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authentificatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -34,4 +36,9 @@ class User extends Authentificatable
     protected $hidden = [
         'password',
     ];
+
+    public function roles(): BelongsTo
+    {
+        return $this->belongsTo(UsersRole::class, 'users_role_id', 'id');
+    }
 }

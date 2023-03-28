@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('countries', function (Blueprint $table) {
-            $table->string('flag_img')->nullable()->default(null);
+            $table->longText('flag_img')->nullable()->default(null);
         });
     }
 

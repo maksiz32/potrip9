@@ -1,3 +1,5 @@
+import DefaultLayoutCSS from './DefaultLayout.module.css';
+
 import {Outlet, Navigate, Link} from "react-router-dom";
 import {useStateContext} from "../../context/ContextProvider";
 import {useEffect, useState} from "react";
@@ -64,7 +66,11 @@ function SearchIcon() {
 export default function DefaultLayout() {
   const {currentUser, token, setUser, setToken} = useStateContext();
   const [anchorEl, setAnchorEl] = useState(null);
-  const navItems = ['Home', 'About', 'Contact']
+  const navItems = [
+    {name: 'Home', link: '/'},
+    {name: 'About', link: '/#'},
+    {name: 'Contact', link: '/#'}
+  ];
 
   useEffect(() => {
     axiosClient.get('/user')
@@ -95,17 +101,24 @@ export default function DefaultLayout() {
 
   return (
     <div id="defaultLayout">
-      <Box sx={{flexGrow: 1}}>
+      <Box sx={{flexGrow: 1}} className={DefaultLayoutCSS.navbar}>
         <AppBar position="static" color="transparent">
           <Toolbar>
             <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-              Photos
+              <Link to="/" style={{color: 'black', textDecoration: 'none'}}>
+                {('potrip').toUpperCase()}
+              </Link>
             </Typography>
             <Box sx={{display: {xs: 'none', sm: 'block'}}}>
               {navItems.map((item) => (
-                <Button key={item}>
-                  {item}
+                <Button
+                  key={item.name}
+                  component={Link}
+                  to={item.link}
+                  className={DefaultLayoutCSS.menu_items}
+                >
+                  {item.name}
                 </Button>
               ))}
             </Box>

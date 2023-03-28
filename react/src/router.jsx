@@ -7,6 +7,7 @@ import NotFound from "./components/NotFound";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
 import GuestLayout from "./components/Layouts/GuestLayout";
 import UserForm from "./components/Users/UserForm";
+import Locations from "./components/Locations/Locations";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,12 @@ const router = createBrowserRouter([
       {
         path: '/users/:id',
         element: <UserForm key="UserUpdate" />,
-        name: 'Users',
+        name: 'Update User',
+      },
+      {
+        path: '/locations/:id',
+        element: <Locations />,
+        name: 'Check Locations',
       },
     ]
   },

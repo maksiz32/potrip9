@@ -5,28 +5,27 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UsersRoleResource;
 use App\Models\User;
+use App\Models\UsersRole;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rules\Password;
-
-use function PHPUnit\Framework\returnValue;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        return UserResource::collection(
-            User::query()
-            ->orderBy('id', 'desc')
-            ->paginate(10)
-        );
+        return response()->json(User::query()
+                                    ->with('roles')
+                                    ->orderBy('id', 'desc')
+                                    ->get());
     }
 
     /**
@@ -48,12 +47,23 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param User $user
-     * @return UserResource
+     * @param Request $request
      */
-    public function show(User $user): UserResource
+    public function show(Request $request)
     {
-        return new UserResource($user);
+        $validated = $request->validate([
+            'id' => 'required|numeric|exists:users,id'
+        ]);
+
+        if ($validated['id']) {
+            $user = User::query()
+                ->where('id', $validated['id'])
+                ->first();
+
+            return response()->json($user);
+        }
+
+        return response("User don't found", 404);
     }
 
     /**
@@ -61,14 +71,18 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param User $user
-     * @return UserResource
      */
-    public function update(Request $request, User $user): UserResource
+    public function update(Request $request)
     {
         $updatedUser = $request->validate([
+            'id' => 'numeric|exists:users,id',
             'login' => 'sometimes|required|string|min:3|max:55|unique:users,login',
             'first_name' => 'string|min:2',
-            'email' => 'email|unique:users,email,' . $this->id,
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($request->id),
+            ],
             'password' => [
                   'confirmed',
                   Password::min(8)
@@ -80,9 +94,12 @@ class UserController extends Controller
         if (isset($updatedUser['password'])) {
             $updatedUser['password'] = bcrypt($updatedUser['password']);
         }
+
+        /** @var User $user */
+        $user = User::where('id', $updatedUser['id'])->limit(1)->first();
         $user->update($updatedUser);
 
-        return new UserResource($user);
+        return response()->json(['user' => $user]);
     }
 
     /**
@@ -115,5 +132,15 @@ class UserController extends Controller
         ]);
 
         return response("User access is changed", 201);
+    }
+
+    public function getUserRoles(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(UsersRoleResource::collection(UsersRole::all()));
+    }
+
+    public function storeUser(User $user)
+    {
+        //
     }
 }

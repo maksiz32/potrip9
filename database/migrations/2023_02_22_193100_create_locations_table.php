@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table
                 ->foreignIdFor(Country::class)
-                ->comment('Связь с таблицей клиенты, если это VIP или коммерческий пользователь');
+                ->comment('Связь с таблицей Страны');
             $table
                 ->bigInteger('regions_id')
                 ->nullable()

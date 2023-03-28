@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -21,17 +22,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
         Route::get('/{id}', [UserController::class, 'show']);
+        Route::post('/new', [UserController::class, 'storeUser']);
         Route::put('/{id}', [UserController::class, 'update']);
-        Route::delete('/{id}', [UserController::class, 'destroy']);
-        Route::post('/{id}/block', [UserController::class, 'blockUser']);
+//        Route::delete('/{id}', [UserController::class, 'destroy']);
+        Route::put('/{id}/block', [UserController::class, 'blockUser']);
     });
 
+    Route::get('/user-roles', [UserController::class, 'getUserRoles']);
+
     Route::group(['prefix' => 'points'], function () {
-        Route::post('/', [PointController::class, 'index']);
+        Route::get('/', [PointController::class, 'index']);
     });
 
     Route::group(['prefix' => 'countries'], function () {
-        Route::put('/', [CountryApiController::class, 'index']);
+        Route::get('/', [CountryApiController::class, 'index']);
+//        Route::get('/{id}', [CountryApiController::class, 'show']);
+    });
+
+    Route::group(['prefix' => 'locations'], function () {
+        Route::get('/{id}', [LocationController::class, 'getAllByCountry']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

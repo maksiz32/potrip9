@@ -1,0 +1,10 @@
+.navbar {
+  box-shadow: inset 0 0 20px 5px #ffffff9e;
+  background-color: #93cdff;
+}
+
+.menu_items {
+  color: #fff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 2px #0429f8;
+}
